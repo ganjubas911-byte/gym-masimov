@@ -69,7 +69,7 @@ button {
 <script>
 const STEP = 2.5;
 
-// --- ПЛАНИ ТА ВПРАВИ ---
+// --- ПЛАНИ ---
 const plans = [
   {
     name: "Груди + біцепс",
@@ -132,16 +132,25 @@ function changeWeight(name, delta) {
   save();
 }
 
-// --- ЗАВЕРШЕННЯ ТРЕНУВАННЯ ---
+// --- ЗАВЕРШЕННЯ ТРЕНУВАННЯ (ГОЛОВНА ЛОГІКА) ---
 function finishWorkout() {
   state.cycleCount++;
 
+  // Якщо пройшли 3 тренування поточного циклу
   if (state.cycleCount >= 3) {
-    state.cycle = state.cycle === "A" ? "B" : "A";
     state.cycleCount = 0;
+
+    // Якщо був цикл A → переходимо на B
+    if (state.cycle === "A") {
+      state.cycle = "B";
+    } 
+    // Якщо був цикл B → переходимо на наступний план
+    else {
+      state.cycle = "A";
+      state.planIndex = (state.planIndex + 1) % plans.length;
+    }
   }
 
-  state.planIndex = (state.planIndex + 1) % plans.length;
   save();
 }
 
